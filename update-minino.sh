@@ -53,9 +53,7 @@ function delete-matchbox {
 	aux=$(isPackageInstalled matchbox-keyboard)
 
 	if [[ $aux == "False" ]]; then
-		echo -e "${
-		
-		}Matchbox ya había sido desinstalado previamente${NORMAL}"
+		echo -e "${AZUL}Matchbox ya había sido desinstalado previamente${NORMAL}"
 		return
 	fi
 	
