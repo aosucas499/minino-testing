@@ -390,13 +390,12 @@ function fixSource {
 	
 	if [[ $sourceSize = "748" ]]; then
 		
-		echo "Fichero sources.list apropiado"
+		echo -e "${AZUL}Fichero sources.list apropiado${NORMAL}"
 	else
 		sudo wget https://raw.githubusercontent.com/aosucas499/sources/main/minino-tde-actual.list -O /tmp/sources.list
 		sudo cp /tmp/sources.list $source
 		sudo apt update -y
-		echo "Fichero sources.list corregido"
-		notify-send "Fichero sources.list corregido"
+		echo -e "${AZUL}Fichero sources.list corregido${NORMAL}"
 	fi
 }
 
@@ -405,13 +404,12 @@ function fixSource2 {
 	
 	if [[ $source2Size = "60" ]]; then
 		
-		echo "Fichero sources2.list apropiado"
+		echo -e "${AZUL}Fichero sources2.list apropiado${NORMAL}"
 	else
 		sudo wget https://raw.githubusercontent.com/aosucas499/sources/main/minino-tde-multimedia-actual.list -O /tmp/multimedia2.list
 		sudo cp /tmp/multimedia2.list $source2
 		sudo apt update -y
-		echo "Fichero multimedia2.list corregido"
-		notify-send "Fichero multimedia2.list corregido"
+		echo -e "${AZUL}Fichero multimedia2.list corregido${NORMAL}"
 	fi
 }
 
