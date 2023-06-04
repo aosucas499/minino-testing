@@ -18,6 +18,11 @@ FIREFOX=https://download-installer.cdn.mozilla.net/pub/firefox/releases/83.0/lin
 LANZADOR=https://raw.githubusercontent.com/aosucas499/actualiza-firefox/master/firefox-latest.desktop
 NEWLANZADOR=firefox-latest.desktop
 
+source=/etc/apt/sources.list
+source2=/etc/apt/sources.list.d/multimedia2.list
+sourceSize=$(du -b $source|cut -f 1)
+source2Size=$(du -b $source2|cut -f 1)
+
 ROJO="\033[1;31m"
 NORMAL="\033[0m"
 AZUL="\033[1;34m"
@@ -380,6 +385,36 @@ fi
 
 }
 
+function fixSource {
+
+	
+	if [[ $sourceSize = "748" ]]; then
+		
+		echo "Fichero sources.list apropiado"
+	else
+		sudo wget https://raw.githubusercontent.com/aosucas499/sources/main/minino-tde-actual.list -O /tmp/sources.list
+		sudo cp /tmp/sources.list $source
+		sudo apt update -y
+		echo "Fichero sources.list corregido"
+		notify-send "Fichero sources.list corregido"
+	fi
+}
+
+function fixSource2 {
+
+	
+	if [[ $source2Size = "60" ]]; then
+		
+		echo "Fichero sources2.list apropiado"
+	else
+		sudo wget https://raw.githubusercontent.com/aosucas499/sources/main/minino-tde-multimedia-actual.list -O /tmp/multimedia2.list
+		sudo cp /tmp/multimedia2.list $source2
+		sudo apt update -y
+		echo "Fichero multimedia2.list corregido"
+		notify-send "Fichero multimedia2.list corregido"
+	fi
+}
+
 function prepareIso {
 	
 	echo -e "${AZUL}Preparando la ISO${NORMAL}"
@@ -649,6 +684,8 @@ customize-app
 firefox83-system
 sudoersUpdate
 fixmultimediaSource
+fixSource
+fixSource2
 
 autostartUpdateMinino
 
