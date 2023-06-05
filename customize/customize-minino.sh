@@ -35,15 +35,15 @@ function cga-brillo {
 	#    
     	sudo apt-get update -y
 	
-	wget "https://github.com/aosucas499/$REPO_GITHUB/raw/main/cga-brillo/cga-indicator-brightness_0.1-8_all.deb" -O /tmp/cga-indicator-brightness_0.1-8_all.deb
+	wget "https://github.com/$REPO_GITHUB/raw/main/cga-brillo/cga-indicator-brightness_0.1-8_all.deb" -O /tmp/cga-indicator-brightness_0.1-8_all.deb
 	
-	wget "https://github.com/aosucas499/$REPO_GITHUB/raw/main/cga-brillo/indicator-applet-complete_0.5.0-0ubuntu1_i386.deb" -O /tmp/indicator-applet-complete_0.5.0-0ubuntu1_i386.deb
+	wget "https://github.com/$REPO_GITHUB/raw/main/cga-brillo/indicator-applet-complete_0.5.0-0ubuntu1_i386.deb" -O /tmp/indicator-applet-complete_0.5.0-0ubuntu1_i386.deb
 	
-	wget "https://github.com/aosucas499/$REPO_GITHUB/raw/main/cga-brillo/libnotify-bin_0.7.5-1_i386.deb" -O /tmp/libnotify-bin_0.7.5-1_i386.deb
+	wget "https://github.com/$REPO_GITHUB/raw/main/cga-brillo/libnotify-bin_0.7.5-1_i386.deb" -O /tmp/libnotify-bin_0.7.5-1_i386.deb
 	
-	wget "https://github.com/aosucas499/$REPO_GITHUB/raw/main/cga-brillo/notify-osd-icons_0.7_all.deb" -O /tmp/notify-osd-icons_0.7_all.deb
+	wget "https://github.com/$REPO_GITHUB/raw/main/cga-brillo/notify-osd-icons_0.7_all.deb" -O /tmp/notify-osd-icons_0.7_all.deb
 	
-	wget "https://github.com/aosucas499/$REPO_GITHUB/raw/main/cga-brillo/notify-osd_0.9.34-0ubuntu2_i386.deb" -O /tmp/notify-osd_0.9.34-0ubuntu2_i386.deb
+	wget "https://github.com/$REPO_GITHUB/raw/main/cga-brillo/notify-osd_0.9.34-0ubuntu2_i386.deb" -O /tmp/notify-osd_0.9.34-0ubuntu2_i386.deb
 	
 	sudo dpkg -i /tmp/indicator-applet-complete_0.5.0-0ubuntu1_i386.deb
 	sudo dpkg -i /tmp/libnotify-bin_0.7.5-1_i386.deb
@@ -51,6 +51,7 @@ function cga-brillo {
 	sudo dpkg -i /tmp/notify-osd-icons_0.7_all.deb
 	sudo dpkg -i /tmp/cga-indicator-brightness_0.1-8_all.deb
         sudo apt-get install -f -y
+	sudo rm /tmp/*.deb
 }
 
 # Desactiva el apagado automático del equipo
@@ -809,7 +810,7 @@ opciones=("${opciones[@]}" `navegacionPrivadaCheck` navegacionPrivada "Navegaci�
 opciones=("${opciones[@]}" `accesoSSHCheck` accesoSSH "Permitir conexión por SSH")
 opciones=("${opciones[@]}" `instalarSigalaCheck` instalarSigala "Instalar HGR-Sigala")
 opciones=("${opciones[@]}" `soundProblemCheck` soundProblem "Corregir audio NB500/N100SP")
-opciones=("${opciones[@]}" `cga-brilloCheck` cga-brillo "Control de brillo en dispositivos con gráfica INTEL (ex:Chuck Norris")
+opciones=("${opciones[@]}" `cga-brilloCheck` cga-brillo "Control de brillo en dispositivos con gráfica INTEL (ex:Chuck Norris)")
 
 # Mostramos las opciones personalizables
 
@@ -822,8 +823,8 @@ opc=$( \
         --column="funcionAEjecutar" \
         --column="Descripción" \
         --hide-column=2 \
-        --width=500 \
-        --height=250 \
+        --width=550 \
+        --height=300 \
    "${opciones[@]}" \
 )
 
