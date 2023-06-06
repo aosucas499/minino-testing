@@ -127,7 +127,7 @@ def scroll_wheel_icon(mi, m, event):
 # Bloque principal del indicator
 #
 
-ind = appindicator.Indicator ("indicator-brightness", iconos[get_brillo_actual()], appindicator.CATEGORY_HARDWARE)
+ind = appindicator.Indicator ("indicator-brightness", iconos[obtener_brillo_actual()], appindicator.CATEGORY_HARDWARE)
 ind.set_status (appindicator.STATUS_ACTIVE)
 ind.set_label("Brillo")
 ind.connect("scroll-event", scroll_wheel_icon)
