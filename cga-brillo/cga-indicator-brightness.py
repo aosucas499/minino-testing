@@ -43,62 +43,72 @@ iconos = {
 	0: "/usr/share/notify-osd/icons/gedu/status/notification-gpm-brightness-lcd-invalid.png",
 }
 
-#class DBusObject(dbus.service.Object):
+class DBusObject(dbus.service.Object):
 
-	#@dbus.service.method(dbus_interface='com.ubuntu.indicator.brightness', in_signature='', out_signature='')
-	#def bajar_brillo(self):
-		#bajar_brillo()
+	@dbus.service.method(dbus_interface='com.ubuntu.indicator.brightness', in_signature='', out_signature='')
+	def bajar_brillo(self):
+		bajar_brillo()
 
-	#@dbus.service.method(dbus_interface='com.ubuntu.indicator.brightness', in_signature='', out_signature='')
-	#def subir_brillo(self):
-		#subir_brillo()
+	@dbus.service.method(dbus_interface='com.ubuntu.indicator.brightness', in_signature='', out_signature='')
+	def subir_brillo(self):
+		subir_brillo()
 
 def update_brightness_indicator():
 	crear_indicador_brillo(ind)
 
 def restaurar_brillo_cero():
-	brillo_actual = obtener_brillo_actual()
+	brillo_actual = get_brillo_actual()
 	if brillo_actual == 0:
-		ajustar_brillo("1")
+		set_brillo("1")
 
-def obtener_brillo_actual():
-    with open('/sys/class/backlight/acpi_video0/brightness', 'r') as archivo:
-        brillo_actual = int(archivo.read())
-    return brillo_actual
+def get_brillo_actual():
+	brillomax = get_brillo_maximo()
+	unidad = brillomax / grad
+	res = 0
+	try:
+		outexec = subprocess.Popen(['pkexec','/usr/lib/gnome-settings-daemon/gsd-backlight-helper','--get-brightness'], stdout=subprocess.PIPE)
+		act = int(outexec.communicate()[0])
+		res = act / unidad
+	except:
+		res = 0
+	return res
 
-def obtener_max_brillo():
-    with open('/sys/class/backlight/acpi_video0/max_brightness', 'r') as archivo:
-        max_brillo = int(archivo.read())
-    return max_brillo
+def get_brillo_maximo():
+	res = 0
+	try:
+		outexec = subprocess.Popen(['pkexec','/usr/lib/gnome-settings-daemon/gsd-backlight-helper','--get-max-brightness'], stdout=subprocess.PIPE)
+		res = int(outexec.communicate()[0])
+	except:
+		res = 0
+	return res
 
-def subir_brillo(grad):
-    brillo_actual = obtener_brillo_actual()
-    max_brillo = obtener_max_brillo()
-    nuevo_brillo = min(brillo_actual + int(max_brillo * int(grad) / 100), max_brillo)
-    ajustar_brillo(nuevo_brillo)
+def subir_brillo():
+	actual = get_brillo_actual()
+	if actual != grad:
+		set_brillo(get_brillo_actual() + 1)
 
-def bajar_brillo(grad):
-    brillo_actual = obtener_brillo_actual()
-    nuevo_brillo = max(brillo_actual - int(brillo_actual * int(grad) / 100), 0)
-    ajustar_brillo(nuevo_brillo)
+def bajar_brillo():
+	actual = get_brillo_actual()
+	if actual != 1:
+		set_brillo(get_brillo_actual() - 1)
 
-def ajustar_brillo(grad):
-    max_brillo = obtener_max_brillo()
-    nuevo_brillo = int((max_brillo * int(grad)) / 10)
-    nuevo_brillo = min(max(nuevo_brillo, 0), max_brillo)
-    with open('/sys/class/backlight/acpi_video0/brightness', 'w') as archivo:
-        archivo.write(str(nuevo_brillo))
+def set_brillo(val):
+	brillomax = get_brillo_maximo()
+	unidad = brillomax / grad
+	nuevovalor = unidad * int(val)
+	subprocess.call(['pkexec','/usr/lib/gnome-settings-daemon/gsd-backlight-helper','--set-brightness',"%s" % nuevovalor])
+	crear_indicador_brillo(ind)
 
 def menu_item_response(mi, var):
 	print "LLAMADA A EJECUTAR"
 	val = re.sub('[^\d]', '', var)
-	ajustar_brillo(val)
+	set_brillo(val)
 
 def crear_indicador_brillo(ind):
 	menu = gtk.Menu()
-	brillo_actual = obtener_brillo_actual()
-	max_brillo = obtener_max_brillo()
-	if max_brillo == 0:
+	brillo_actual = get_brillo_actual()
+	brillomax = get_brillo_maximo()
+	if brillomax == 0:
 		menu_items = gtk.MenuItem("Controlador no disponible")
 		menu_items.set_sensitive(False)
 		ind.set_icon("/usr/share/notify-osd/icons/gnome/scalable/status/notification-gpm-brightness-lcd-invalid.svg")
@@ -127,7 +137,7 @@ def scroll_wheel_icon(mi, m, event):
 # Bloque principal del indicator
 #
 
-ind = appindicator.Indicator ("indicator-brightness", iconos[obtener_brillo_actual()], appindicator.CATEGORY_HARDWARE)
+ind = appindicator.Indicator ("indicator-brightness", iconos[get_brillo_actual()], appindicator.CATEGORY_HARDWARE)
 ind.set_status (appindicator.STATUS_ACTIVE)
 ind.set_label("Brillo")
 ind.connect("scroll-event", scroll_wheel_icon)
@@ -137,13 +147,13 @@ if __name__ == "__main__":
 	crear_indicador_brillo(ind)
 	
 	# Arrancar servicio DBus, esperando senales de subida y bajada de brillo
-	#dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-	#session_bus = dbus.SessionBus()
-	#name = dbus.service.BusName("com.ubuntu.indicator.brightness", session_bus)
-	#object = DBusObject(session_bus, "/adjust")
+	dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+	session_bus = dbus.SessionBus()
+	name = dbus.service.BusName("com.ubuntu.indicator.brightness", session_bus)
+	object = DBusObject(session_bus, "/adjust")
 
 	# Atender las subidas y bajadas de brillo con las teclas para actualizar el indicador
-	#session_bus.add_signal_receiver(update_brightness_indicator, dbus_interface = "org.gnome.SettingsDaemon.Power.Screen", signal_name = "Changed")
+	session_bus.add_signal_receiver(update_brightness_indicator, dbus_interface = "org.gnome.SettingsDaemon.Power.Screen", signal_name = "Changed")
 
 	
 	gtk.main()
