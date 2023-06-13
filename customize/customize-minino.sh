@@ -18,6 +18,9 @@ readonly DEBUG='n'
 
 REPO_GITHUB=aosucas499/minino-testing
 
+#Actualizamos si quiere el usuario el sistema con update-minino por si es necesario algún paquete para customize-minino 
+update-minino
+
 # -----------------------------------------------------------------------------
 # Definición de las funciones utilizadas en el script
 # -----------------------------------------------------------------------------
