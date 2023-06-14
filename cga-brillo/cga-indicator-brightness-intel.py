@@ -71,23 +71,24 @@ def obtener_max_brillo():
         max_brillo = int(archivo.read())
     return max_brillo
 
-def subir_brillo(grad):
+def subir_brillo():
     brillo_actual = obtener_brillo_actual()
     max_brillo = obtener_max_brillo()
     nuevo_brillo = min(brillo_actual + int(max_brillo * int(grad) / 100), max_brillo)
     ajustar_brillo(nuevo_brillo)
 
-def bajar_brillo(grad):
+def bajar_brillo():
     brillo_actual = obtener_brillo_actual()
     nuevo_brillo = max(brillo_actual - int(brillo_actual * int(grad) / 100), 0)
     ajustar_brillo(nuevo_brillo)
 
-def ajustar_brillo(grad):
+def ajustar_brillo(val):
     max_brillo = obtener_max_brillo()
-    nuevo_brillo = int((max_brillo * int(grad)) / 10)
-    nuevo_brillo = min(max(nuevo_brillo, 0), max_brillo)
+    nuevo_brillo = int((max_brillo * int(val)) / 10)
+    #nuevo_brillo = min(max(nuevo_brillo, 0), max_brillo)
     with open('/sys/class/backlight/acpi_video0/brightness', 'w') as archivo:
         archivo.write(str(nuevo_brillo))
+	crear_indicador_brillo(ind)
 
 def menu_item_response(mi, var):
 	print "LLAMADA A EJECUTAR"
