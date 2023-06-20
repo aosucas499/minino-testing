@@ -5,6 +5,7 @@ import gtk
 import appindicator
 
 APPINDICATOR_ID = 'brightness_app_indicator'
+ICON_FOLDER = '/usr/share/notify-osd/icons/gedu/status/'
 
 def set_brightness(value):
     backlight_dir = '/sys/class/backlight/'
@@ -23,6 +24,7 @@ def set_brightness(value):
     # Verificar si se encontró una carpeta válida
     if valid_folder is None:
         print("No se encontró una carpeta de brillo válida.")
+        set_invalid_brightness_icon()
         return
 
     # Construir la ruta completa al archivo de brillo
@@ -42,6 +44,28 @@ def set_brightness(value):
     # Escribir el nuevo valor de brillo
     with open(brightness_path, 'w') as file:
         file.write(str(new_brightness))
+
+    set_brightness_icon(value)
+
+def set_brightness_icon(value):
+    # Determinar el icono según el valor de brillo
+    if value < 30:
+        icon_name = 'notification-display-brightness-off-dark'
+    elif value > 70:
+        icon_name = 'notification-display-brightness-full-dark'
+    else:
+        icon_name = 'notification-display-brightness-medium-dark'
+
+    icon_path = os.path.join(ICON_FOLDER, '{}.png'.format(icon_name))
+
+    # Actualizar el icono en el indicador de la aplicación
+    indicator.set_icon(icon_path)
+
+def set_invalid_brightness_icon():
+    icon_path = os.path.join(ICON_FOLDER, 'notification-gpm-brightness-lcd-invalid.png')
+
+    # Actualizar el icono en el indicador de la aplicación
+    indicator.set_icon(icon_path)
 
 def on_menu_item_activate(menu_item, value):
     set_brightness(value)
@@ -64,6 +88,7 @@ def build_menu():
     return menu
 
 def main():
+    global indicator
     # Crea el indicador de la aplicación
     indicator = appindicator.Indicator(
         APPINDICATOR_ID,
