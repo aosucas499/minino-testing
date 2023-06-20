@@ -813,7 +813,7 @@ opciones=("${opciones[@]}" `navegacionPrivadaCheck` navegacionPrivada "Navegaci�
 opciones=("${opciones[@]}" `accesoSSHCheck` accesoSSH "Permitir conexión por SSH")
 opciones=("${opciones[@]}" `instalarSigalaCheck` instalarSigala "Instalar HGR-Sigala")
 opciones=("${opciones[@]}" `soundProblemCheck` soundProblem "Corregir audio NB500/N100SP")
-opciones=("${opciones[@]}" `cga-brilloCheck` cga-brillo "Control de brillo en dispositivos con gráfica INTEL (ex:Chuck Norris)")
+opciones=("${opciones[@]}" `cga-brilloCheck` cga-brillo "Control de brillo en portátiles")
 
 # Mostramos las opciones personalizables
 
