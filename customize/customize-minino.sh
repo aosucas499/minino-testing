@@ -131,7 +131,7 @@ function controlPresencia {
 	# Si el usuario selecciona "Sí"
 	if [[ $? -eq 0 ]]; then
     	# Quitar los # de las dos últimas líneas
-    	sed -i 's/^#xset/xset/' ~/.config/lxsession/LXDE/autostart
+     	sed -i '/^#xset/s/^#//' ~/.config/lxsession/LXDE/autostart
      	zenity --info --text="Desde el próximo arranque el dispositivo permanecerá con la pantall siempre encendida"
 	fi
 
@@ -149,7 +149,7 @@ function controlPresencia {
 function controlPresenciaUndo {
 
     sudo rm /etc/xdg/autostart/Firefox-latest-sleep30.desktop
-    sed -i 's/^xset/#xset/' ~/.config/lxsession/LXDE/autostart
+    sed -i '/^xset/s/^/#/' ~/.config/lxsession/LXDE/autostart
 }
 
 #Comprueba si está activo el control de presencia de Séneca
