@@ -125,17 +125,17 @@ function controlPresencia {
 	wget "https://raw.githubusercontent.com/$REPO_GITHUB/main/tools/Firefox-latest-sleep30"
     	sudo mv Firefox-latest-sleep30 /etc/xdg/autostart/Firefox-latest-sleep30.desktop
 
-# Preguntar al usuario si desea instalar la opción de pantalla siempre encendida
-read -p "¿Deseas instalar la opción de pantalla siempre encendida? (s/n): " respuesta
+	# Preguntar al usuario si desea instalar la opción de pantalla siempre encendida
+	read -p "¿Deseas instalar la opción de pantalla siempre encendida? (s/n): " respuesta
 
-# Convertir la respuesta a minúscula para evitar problemas de mayúsculas
-respuesta=$(echo "$respuesta" | tr '[:upper:]' '[:lower:]')
+	# Convertir la respuesta a minúscula para evitar problemas de mayúsculas
+	respuesta=$(echo "$respuesta" | tr '[:upper:]' '[:lower:]')
 
-if [[ "$respuesta" == "s" ]]; then
-    # Si la respuesta es afirmativa, quitar las arrobas de las dos últimas líneas
-    sed -i '$ s/@//' "$HOME/.config/lxsession/LXDE/autostart"
-    sed -i '$ s/@//' "$HOME/.config/lxsession/LXDE/autostart"
-fi
+	if [[ "$respuesta" == "s" ]]; then
+   		 # Si la respuesta es afirmativa, quitar las arrobas de las dos últimas líneas
+    		sed -i '$ s/^#//' "$HOME/.config/lxsession/LXDE/autostart"
+		sed -i '$ s/^#//' "$HOME/.config/lxsession/LXDE/autostart"
+	fi
 
 	## Informa al usuario de varios aspectos a tener en cuenta
 	#---
@@ -151,10 +151,8 @@ zenity --info --text="Quizás le interese instalar el 'Inicio de sesión automá
 function controlPresenciaUndo {
 
     sudo rm /etc/xdg/autostart/Firefox-latest-sleep30.desktop
-
-    sed -i '$ s/^/@/' "$HOME/.config/lxsession/LXDE/autostart"
-sed -i '$ s/^/@/' "$HOME/.config/lxsession/LXDE/autostart"
-    
+    sed -i '$ s/^/#/' "$HOME/.config/lxsession/LXDE/autostart"
+    sed -i '$ s/^/#/' "$HOME/.config/lxsession/LXDE/autostart"    
 }
 
 #Comprueba si está activo el control de presencia de Séneca
